@@ -3,13 +3,12 @@
 import http from 'http';
 import express from 'express';
 import webpack from 'webpack';
-import ShareDb from 'sharedb';
-import WebSocket from 'ws';
 import WebpackDevMiddleware from 'webpack-dev-middleware';
 import WebpackHotMiddleware from 'webpack-hot-middleware';
-import WebSocketJSONStream from '@teamwork/websocket-json-stream';
 
-import webpack_config from '../webpack.config';
+import webpack_config from '../../webpack.config';
+
+import share from './share';
 
 // set up the express server
 const app = express();
@@ -27,13 +26,9 @@ app.use(WebpackHotMiddleware(compiler));
 
 // create the server
 const server = http.createServer(app);
-const wss = new WebSocket.Server({ server });
 
 // set up the sharedb backend
-const backend = new ShareDb();
-wss.on('connection', ws => {
-	backend.listen(new WebSocketJSONStream(ws));
-});
+share(server);
 
 // listen to incoming requests
 server.listen(8080, () => {

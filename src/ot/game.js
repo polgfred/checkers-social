@@ -2,14 +2,17 @@ import Rules from '../core/rules';
 import { newBoard, newBoardFromData } from '../core/utils';
 
 export default {
-	name: 'checkers',
+	name: 'checkers/game',
 
-	uri: 'http://polgardy.com/uri/polgfred/types/checkers',
+	uri: 'http://sustainablecode.com/uri/types/checkers/game',
 
 	create(initial) {
-		return initial
-			? new Rules(newBoardFromData(initial.board), initial.side)
-			: new Rules(newBoard(), 1);
+		if (initial) {
+			const { board, side } = initial;
+			return new Rules(newBoardFromData(board), side);
+		} else {
+			return new Rules(newBoard(), 1);
+		}
 	},
 
 	deserialize(data) {
